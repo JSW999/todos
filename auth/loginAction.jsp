@@ -37,7 +37,7 @@
     	  	userToken = rs.getString("userToken");
             session.setAttribute("userID", userID);
             session.setAttribute("userToken", userToken);
-         	response.sendRedirect("https://jsw999.github.io/todos/auth/loginAction.jsp");
+         	response.sendRedirect("https://jsw999.github.io/todos/mainPage.jsp");
       } else { 
       %>
          <script>
