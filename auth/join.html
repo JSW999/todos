@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Page</title>
+<link rel="stylesheet" href="exam1.css">
+</head>
+<script src="joinJS.js"></script>
+<body>
+
+<div class="login-container">
+  <form class="login-form" method="post" action="joinAction.jsp" onsubmit="return validateForm();">
+    <h2>Sign Up</h2>
+    <p>반가워요</p>
+    
+    <div class="form-control">
+      <label for="userID">UserID:</label>
+      <input type="text" id="userID" name="userID" required>
+    </div>
+    
+    <div class="form-control">
+      <label for="password">Password:</label>
+      <input type="text" id="userPassword" name="userPassword" required>
+    </div>
+    
+    <div class="form-control">
+      <label for="email">Email</label>
+      <input type="email" id="userEmail" name="userEmail" required>
+    </div>
+    
+    <button type="submit" value="Join">Sign Up!</button>
+
+    <div class="social-login">
+      <p>Or login with</p>
+      <button type="button" class="google-btn">Google</button>
+      <button type="button" class="facebook-btn">Facebook</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

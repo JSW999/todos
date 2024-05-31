@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="../main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        /* 추가 스타일링 */
+        #calendar {
+            width: 100%;
+            margin: 20px auto;
+        }
+        #add-event-form {
+            display: none;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 400px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+		
+		#edit-event-form {
+		    display: none; /* 기본적으로 숨김 */
+		    position: fixed; /* 화면에 고정 */
+		    top: 20%; /* 위에서 20% 위치 */
+		    left: 50%; /* 왼쪽에서 50% 위치 */
+		    transform: translate(-50%, -20%); /* 가운데 정렬 */
+		    z-index: 1000; /* 높은 z-index 값으로 다른 요소 위에 표시 */
+		    background-color: #f2f2f2;
+		    padding: 20px;
+		    border-radius: 10px;
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		    max-width: 400px;
+		    width: calc(100% - 40px); /* 작은 화면에서의 대응 */
+		}
+		
+        #add-event-form input,
+        #add-event-form button,
+        #edit-event-form input,
+        #edit-event-form button,
+        #edit-event-form textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px auto;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        #add-event-button,
+        #save-add-event-button,        
+        #close-add-event-button,
+        
+        #save-edit-event-button,
+        #close-edit-form-button,
+        #delete-edit-event-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #add-event-button:hover,
+        #save-add-event-button:hover,
+        #close-add-event-button:hover,
+        
+        #save-edit-event-button:hover,
+        #close-edit-form-button:hover,
+        #delete-edit-event-button:hover {
+            background-color: #218838;
+        }
+
+        .ui-datepicker {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+	<!-- 캘린더 일정 추가 버튼 -->
+	<button id="add-event-button">일정 추가</button>
+    <div id="add-event-form">
+        <input type="text" id="event-title" placeholder="일정 제목" required>
+        <input type="text" id="event-start-date-display" placeholder="일정 시작" readonly>
+        <input type="date" id="event-start-date" style="display: none;" required>
+        <input type="text" id="event-end-date-display" placeholder="일정 종료" readonly>
+        <input type="date" id="event-end-date" style="display: none;" required> 
+        <button id="save-add-event-button">저장</button>
+        <button id="close-add-event-button">닫기</button>
+    </div>
+    
+    <div id="edit-event-form">
+    <input type="text" id="edit-event-title" placeholder="일정 제목" required>
+    <input type="text" id="edit-event-start-date-display" placeholder="시작 날짜" readonly>
+    <input type="date" id="edit-event-start-date" style="display: none;" required>
+    <input type="text" id="edit-event-end-date-display" placeholder="종료 날짜" readonly>
+    <input type="date" id="edit-event-end-date" style="display: none;" required>
+    <textarea id="edit-event-details" rows="6"></textarea>
+    <button id="save-edit-event-button">저장</button>
+    <button id="delete-edit-event-button">삭제</button>
+    <button id="close-edit-form-button">닫기</button>
+	</div>
+    
+    <div id="calendar"></div>
+
+    <script src="../main.js"></script>
+    <script src="../locales-all.js"></script>
+    
+    <script>
+    	// 오늘 날짜 가져오기
+    	var today = new Date();
+
+    	var year = today.getFullYear();
+    	var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    	var day = ('0' + today.getDate()).slice(-2);
+
+    	var dateString = year + '-' + month  + '-' + day;
+    </script>
+    
+    <script>
+    	// fullcalendar 표시
+        document.addEventListener("DOMContentLoaded", function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ko',
+                headerToolbar: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                initialDate: dateString,
+                navLinks: false,
+                editable: true,
+                dayMaxEvents: true,
+                fixedWeekCount: false,
+                // 저장된 event 가져오기
+                events: function(fetchInfo, successCallback, failureCallback) {
+                	var events = [];
+                    // 첫 번째 URL에서 데이터 가져오기
+                    $.ajax({
+                        url: 'getEvent.jsp',
+                        dataType: 'json',
+                        success: function(data) {
+                            var personalEvents = data.map(function(event) {
+                                event.color = 'blue'; // 첫 번째 데이터는 파란색으로 설정
+                                return event;
+                            });
+                            events = events.concat(personalEvents); // 파란색 이벤트 추가
+
+                            // 두 번째 URL에서 데이터 가져오기
+                            $.ajax({
+                                url: 'getFriendEvent.jsp', // 두 번째 이벤트 데이터를 가져올 URL
+                                dataType: 'json',
+                                success: function(data) {
+                                    var friendEvents = data.map(function(event) {
+                                        event.color = 'red'; // 두 번째 데이터는 빨간색으로 설정
+                                        event.extendedProps = {
+                                        	editable: false };
+                                        return event;
+                                    });
+                                    events = events.concat(friendEvents); // 빨간색 이벤트 추가
+
+                                    successCallback(events); // 모든 이벤트를 성공 콜백에 전달
+
+                                },
+                                error: function() {
+                                    failureCallback(); // 두 번째 AJAX 요청 실패 시 콜백 호출
+
+                                }
+                            });
+                        },
+                        error: function() {
+                            failureCallback(); // 첫 번째 AJAX 요청 실패 시 콜백 호출
+
+                        }
+                    });
+                },
+                
+                // event 클릭 시 제목, 날짜 수정 and 일정 세부 사항 작성 기능 
+                eventClick: function(info) {
+                    var event = info.event;
+					
+         
+                    
+                    // 클릭한 event 저장된 일정 제목, 날짜 값 가져오기
+                    document.getElementById('edit-event-title').value = event.title;
+                    document.getElementById('edit-event-start-date').value = event.startStr;
+                    document.getElementById('edit-event-start-date-display').value = event.startStr;
+                    document.getElementById('edit-event-end-date').value = event.endStr ? event.endStr.slice(0, 10) : event.startStr;
+                    document.getElementById('edit-event-end-date-display').value = event.endStr ? event.endStr.slice(0, 10) : event.startStr;
+					
+                    // 클릭한 event 저장된 일정 세부 사항 가져오기
+                    $.ajax({
+                        url: 'getDetailsCalendar.jsp',
+                        method: 'GET',
+                        data: {
+                            id: event.id
+                          
+                        },
+                        success: function(response) {
+                            var detailsField = document.getElementById('edit-event-details');
+                            detailsField.value = response.details; 
+                        },
+                        error: function() {
+                            alert('일정 세부 사항을 가져오는 중 오류가 발생했습니다.');
+                        }
+                    });
+					
+                    // edit-event-form 보이기
+                    document.getElementById('edit-event-form').style.display = 'block';
+					
+                    if (event.extendedProps.editable === false) {
+                        document.getElementById('save-edit-event-button').style.display = 'none';
+                        document.getElementById('delete-edit-event-button').style.display = 'none';
+                        
+                        document.getElementById('edit-event-title').disabled = true;
+                        document.getElementById('edit-event-start-date-display').disabled = true;
+                        document.getElementById('edit-event-end-date-display').disabled = true;
+                        document.getElementById('edit-event-details').disabled = true;
+                        
+                    } else {
+                        document.getElementById('save-edit-event-button').style.display = 'block';
+                        document.getElementById('delete-edit-event-button').style.display = 'block';
+                    }
+                    
+                	// 기존 리스너 제거 후 새로운 리스너 추가
+                    $('#close-edit-form-button').off('click').on('click', closeEditForm);
+                    $('#save-edit-event-button').off('click').on('click', saveEvent);
+                    $('#delete-edit-event-button').off('click').on('click', deleteEvent);
+
+                    function closeEditForm() {
+                        document.getElementById('edit-event-form').style.display = 'none';
+                    }
+					
+                    // 업데이트할 수정 값들 
+                    function saveEvent() {
+                        var updatedTitle = document.getElementById('edit-event-title').value;
+                        var updatedStartDate = document.getElementById('edit-event-start-date').value;
+                        var updatedEndDate = document.getElementById('edit-event-end-date').value;
+                        var updatedDetails = document.getElementById('edit-event-details').value;
+						
+                        // db 수정 and 이벤트에 수정된 값 저장 
+                        if (updatedTitle && updatedStartDate && updatedEndDate) {
+                            $.ajax({
+                                url: 'updateEvent.jsp',
+                                method: 'POST',
+                                data: {
+                                    id: event.id,
+                                    title: updatedTitle,
+                                    start_date: updatedStartDate,
+                                    end_date: updatedEndDate,
+                                    details: updatedDetails
+                                },
+                                success: function(response) {
+                                    if (response.trim() === 'success') {
+                                        event.setProp('title', updatedTitle);
+                                        event.setStart(updatedStartDate);
+                                        event.setEnd(updatedEndDate);
+                                        event.setExtendedProp('details', updatedDetails);
+                                        calendar.refetchEvents();
+                                        document.getElementById('edit-event-form').style.display = 'none';
+                                    } else {
+                                        alert('일정 수정 중 오류가 발생했습니다.');
+                                    }
+                                },
+                                error: function() {
+                                    alert('일정 수정 중 오류가 발생했습니다.');
+                                }
+                            });
+                        } else {
+                            alert('일정 제목과 날짜를 입력하세요.');
+                        }
+                    }
+					
+                    // event 삭제 
+                    function deleteEvent() {
+                        $.ajax({
+                            url: 'deleteEvent.jsp',
+                            method: 'POST',
+                            data: {
+                                id: event.id
+                            },
+                            success: function(response) {
+                                if (response.trim() === 'success') {
+                                    event.remove();
+                                    document.getElementById('edit-event-form').style.display = 'none';
+                                } else {
+                                    alert('일정 삭제 중 오류가 발생했습니다.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Ajax 오류:", status, error);
+                                alert('ajax 일정 삭제 중 오류가 발생했습니다.');
+                            }
+                        });
+                    }
+                }
+            });
+
+
+            
+            calendar.render();
+                       
+            // 일정 시작 datepicker
+            $("#event-start-date-display").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function(dateText) {
+                    $("#event-start-date").val(dateText);
+                    $(this).val(dateText);
+                    $("#event-end-date-display").datepicker("option", "minDate", dateText);
+                }
+            });
+			
+            // 일정 종료 datepicker
+            $("#event-end-date-display").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function(dateText) {
+                    $("#event-end-date").val(dateText);
+                    $(this).val(dateText);
+                }
+            });
+			
+            // 수정 - 일정 시작 datepicker
+            $("#edit-event-start-date-display").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function(dateText) {
+                    $("#edit-event-start-date").val(dateText);
+                    $(this).val(dateText);
+                    $("#edit-event-end-date-display").datepicker("option", "minDate", dateText);
+                }
+            });
+			
+            // 수정 - 일정 종료 datepicker
+            $("#edit-event-end-date-display").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function(dateText) {
+                    $("#edit-event-end-date").val(dateText);
+                    $(this).val(dateText);
+                }
+            });
+          
+            
+            // 일정 추가 버튼 클릭 EventListener - 클릭 시 add-event-form div 열림
+            document.getElementById('add-event-button').addEventListener('click', function() {
+                document.getElementById('add-event-form').style.display = 'block';
+            });
+			
+            document.getElementById('close-add-event-button').addEventListener('click', function() {
+                document.getElementById('add-event-form').style.display = 'none';
+            });
+            
+            // 저장 버튼 클릭 EventListener - 클릭 시 값 가져옴
+            document.getElementById('save-add-event-button').addEventListener('click', function() {
+                var title = document.getElementById('event-title').value;
+                var startDate = document.getElementById('event-start-date').value;
+                var endDate = document.getElementById('event-end-date').value;
+				
+                // 가져온 값을 fullcalendar event로 추가
+                if (title && startDate && endDate) {
+                	
+                    $.ajax({
+                        url: 'addEvent.jsp',
+                        method: 'POST',
+                        data: {
+                            title: title,
+                            start_date: startDate,
+                            end_date: endDate
+                        },
+                        success: function(response) {
+                            if (response.trim() === 'success') {
+                                calendar.refetchEvents();
+                            } else {
+                                alert('일정 추가 중 오류가 발생했습니다.');
+                            }
+                        },
+                        error: function() {
+                            alert('일정 추가 중 오류가 발생했습니다.');
+                        }
+                    });
+                    
+                    // 값 초기화 
+                    document.getElementById('event-title').value = '';
+                    document.getElementById('event-start-date').value = '';
+                    document.getElementById('event-start-date-display').value = '';
+                    document.getElementById('event-end-date').value = '';
+                    document.getElementById('event-end-date-display').value = '';
+                    document.getElementById('add-event-form').style.display = 'none';
+                } else {
+                    alert('일정 제목과 날짜를 입력하세요.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
