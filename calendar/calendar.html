@@ -230,6 +230,12 @@
                     } else {
                         document.getElementById('save-edit-event-button').style.display = 'block';
                         document.getElementById('delete-edit-event-button').style.display = 'block';
+                        
+                        document.getElementById('edit-event-title').disabled = false;
+                        document.getElementById('edit-event-start-date-display').disabled = false;
+                        document.getElementById('edit-event-end-date-display').disabled = false;
+                        document.getElementById('edit-event-details').disabled = false;
+                   
                     }
                     
                 	// 기존 리스너 제거 후 새로운 리스너 추가
@@ -239,6 +245,16 @@
 
                     function closeEditForm() {
                         document.getElementById('edit-event-form').style.display = 'none';
+                        
+                     // 폼을 닫을 때 모든 필드를 다시 활성화
+                        document.getElementById('edit-event-title').disabled = false;
+                        document.getElementById('edit-event-start-date-display').disabled = false;
+                        document.getElementById('edit-event-end-date-display').disabled = false;
+                        document.getElementById('edit-event-details').disabled = false;
+
+                        // 버튼들을 다시 보이게 설정
+                        document.getElementById('save-edit-event-button').style.display = 'block';
+                        document.getElementById('delete-edit-event-button').style.display = 'block';
                     }
 					
                     // 업데이트할 수정 값들 

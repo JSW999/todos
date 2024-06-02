@@ -27,7 +27,6 @@
 
         if (rows > 0) {
             out.print("success");
-            System.out.print("rows-success");
         } else {
             // event 테이블에서 삭제되지 않았다면 schedules 테이블에서 삭제 시도
             String schedulesSql = "DELETE FROM schedules WHERE id = ?";
@@ -38,10 +37,8 @@
 
             if (schedulesRows > 0) {
                 out.print("success");
-                System.out.print("success");
             } else {
                 out.print("failure");
-                System.out.print("failure");
             }
         }
         

@@ -37,7 +37,7 @@
     	  	userToken = rs.getString("userToken");
             session.setAttribute("userID", userID);
             session.setAttribute("userToken", userToken);
-         	response.sendRedirect("https://jsw999.github.io/todos/mainPage.jsp");
+         	response.sendRedirect("http://localhost:8080/todos/mainPage.jsp");
       } else { 
       %>
          <script>

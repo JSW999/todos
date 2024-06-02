@@ -7,7 +7,6 @@
     String endDate = request.getParameter("end_date");
 	String userToken = (String) session.getAttribute("userToken");
 	
-	System.out.println(userToken);
     Connection conn = null;
     PreparedStatement pstmt = null;
     String url = "jdbc:mysql://localhost:3306/scheduleDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";

@@ -221,3 +221,161 @@ h1 span {
 .ui-datepicker {
 	font-size: 16px;
 }
+
+#chat-modal {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    right: 0;
+    top: 5%;
+    height: 90%;
+    width: 400px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-left: 1px solid #888;
+    color: #FFFFFF;
+    overflow-y: auto;
+    border-radius: 10px 0 0 10px;
+}
+
+#chat-messages {
+    background-color: #2e2e2e;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#chat-input {
+    width: calc(100% - 80px);
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#send-message-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-message-button:hover {
+    background-color: #218838;
+}
+
+#chat-room-widget {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#chat-messages-widget {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #2e2e2e;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#chat-input-widget {
+    width: calc(100% - 80px);
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#send-message-button-widget {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-message-button-widget:hover {
+    background-color: #218838;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.message .user {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.message .text {
+    word-break: break-all;
+}
+
+.message .timestamp {
+    font-size: 0.8em;
+    margin-left: auto;
+    color: #bbb;
+}
+
+.message.sent .text {
+    text-align: right;
+}
+
+.message.received .text {
+    text-align: left;
+}
+
+#chat-messages-widget .message .userID {
+	font-size: 1rem;
+}
+
+#chat-messages-widget .message .text {
+    font-size: 1rem; /* 기본 폰트 크기 설정 */
+}
+
+#chat-messages-widget .message .timestamp {
+    font-size: 0.8rem; /* 타임스탬프 기본 폰트 크기 설정 */
+}
+
+#weather-modal .modal-content {
+    position: relative;
+}
+
+#weather-modal .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#weather-modal .close:hover,
+#weather-modal .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.forecast-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.hourly-forecast, .five-day-forecast {
+    flex: 0 0 auto;
+    width: 100px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.hourly-forecast img, .five-day-forecast img {
+    width: 50px;
+    height: 50px;
+}

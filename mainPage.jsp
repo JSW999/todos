@@ -120,6 +120,10 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    
+    <!-- 채팅방 사용자 userID 값 가져오기 -->
+    <script>var userID = "<%= (String) session.getAttribute("userID") %>";</script>
 </head>
 <body>
 	
@@ -162,15 +166,25 @@
             
             <div class="chat widget" id="widget4">
                 <p class="label">채팅</p>
-                <p class="values">내용</p>
-                <div class="icon" onclick="openModal()">></div>
+                <div class="values" id="chat-values">
+                    <div class="icon" id="w_chat">></div>
+                    <div id="chat-room-widget" style="display: none;">
+				        <div id="chat-messages-widget" style="height: 100px; overflow-y: auto;"></div>
+				        <input type="text" id="chat-input-widget" placeholder="메시지를 입력하세요">
+				        <button id="send-message-button-widget">보내기</button>
+                	</div>
+                </div>
                 <div class="resize-handle"></div>
             </div>
             
-            <div class="widget 5" id="widget5">
-                <p class="label">위젯5</p>
-                <p class="values">내용</p>
-                <div class="icon" onclick="openModal()">></div>
+            <div class="weather widget" id="widget5">
+               <div class="label">날씨</div>
+                <div class="values">
+                    <img id="weather-icon" src="" alt="Weather Icon">
+                    <span id="temperature"></span>
+                    <span id="location"></span>
+                </div>
+                <div class="icon" id="open-weather-modal">></div>
                 <div class="resize-handle"></div>
             </div>
             
@@ -291,7 +305,7 @@
 	<div id="calendar-modal" class="modal">
         <div class="modal-content">
             <span id="closeCalendar" class="close">&times;</span>
-            
+
             <h2>캘린더</h2>
             <div id="iframe-container" style="display: none; height: 680px;">
         		<iframe id="iframe" src="" style="width: 100%; height: 80%; border: none;"></iframe>
@@ -299,7 +313,44 @@
         </div>
     </div>
     
+    <!-- 채팅 모달 -->
+    <div class="modal-background" id="modal-background"></div>
+    <div class="modal" id="chat-modal">
+        <span class="close" id="close-chat-modal">&times;</span>
+        <div class="modal-content">
+            <h2>n:n 채팅방</h2>
+            <div>
+                <button id="create-room-button">방 만들기</button>
+                <button id="delete-room-button" style="display:none;">방 삭제</button>
+    			<button id="leave-room-button" style="display:none;">방 나가기</button>
+                <input type="text" id="room-number-input" placeholder="방 번호 입력">
+                <button id="join-room-button">방 참가</button>
+            </div>
+            <div id="chat-room" style="display:none;">
+                <div id="chat-messages" style="height: 400px; overflow-y: auto;"></div>
+                <input type="text" id="chat-input" placeholder="메시지를 입력하세요">
+                <button id="send-message-button">보내기</button>
+            </div>
+        </div>
+    </div>
     
+    <div id="modal-background" class="modal-background"></div>
+    <!-- 날씨 모달 -->
+    <div id="weather-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-weather-modal">&times;</span>
+            <h2>Weather Details</h2>
+            <div>
+                <img id="modal-weather-icon" src="" alt="Weather Icon">
+                <span id="modal-temperature"></span>
+                <span id="modal-location"></span>
+            </div>
+            <h3>시간별 날씨</h3>
+            <div id="hourly-forecast" class="forecast-container"></div>
+            <h3>5일간 날씨 </h3>
+            <div id="five-day-forecast" class="forecast-container"></div>
+        </div>
+    </div>
     
     <script src="mainPage.js?v=1.0"></script>
     <script src="main.js"></script>
