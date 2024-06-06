@@ -7,13 +7,13 @@ import json
 import wave
 
 # OpenAI API 키 설정
-openai.api_key = 'sk-proj-2CEUW1KQyd9bw4FRfa8eT3BlbkFJt9rrmxkljnohcAIPgxps'
+openai.api_key = ''
 
 client = openai.OpenAI(
-    api_key='sk-proj-2CEUW1KQyd9bw4FRfa8eT3BlbkFJt9rrmxkljnohcAIPgxps'
+    api_key=''
 )
 assistant = client.beta.assistants.retrieve(
-    assistant_id='asst_GLHvvY6bsdmhoK98tl6CmpIK'
+    assistant_id=''
 )
 thread = client.beta.threads.create()
 
