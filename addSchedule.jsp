@@ -23,8 +23,8 @@
     Connection conn = null;
     PreparedStatement pstmt = null;
     String url = "jdbc:mysql://localhost:3306/ScheduleDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    String dbUser = "root";
-    String dbPassword = "1234";
+    String dbUser = "";
+    String dbPassword = "";
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
