@@ -15,7 +15,7 @@ const io = socketIo(server, {
         methods: ["GET", "POST"]
     }
 });
-const port = 4000;
+const port = ;
 
 app.use(cors()); // CORS 미들웨어 사용
 
