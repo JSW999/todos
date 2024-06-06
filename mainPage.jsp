@@ -36,8 +36,8 @@
    ResultSet rsSchedules = null;
    
    String url = "jdbc:mysql://localhost:3306/ScheduleDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-   String dbUser = "root"; // MySQL 사용자
-   String dbPassword = "1234"; // MySQL 비밀번호
+   String dbUser = ""; // MySQL 사용자
+   String dbPassword = ""; // MySQL 비밀번호
 	
    // do List 위젯의 내용에 들어갈 전체 할 일, 오늘 할 일 개수 
    int myTotalTasks = 0;
