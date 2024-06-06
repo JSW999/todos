@@ -32,8 +32,8 @@ io.on('connection', (socket) => {
         const uploadPath = path.join(uploadDir, 'audio.wav');
         fs.writeFileSync(uploadPath, audioBuffer);
 
-        const pythonPath = 'C:\\Users\\wjdtn\\whisper\\whispe-env\\Scripts\\python';
-        const scriptPath = 'C:\\Users\\wjdtn\\whisper\\scripts\\voice_test.py';
+        const pythonPath = '';
+        const scriptPath = '';
         const outputPath = path.join(uploadDir, 'output.txt');
 
         const pythonProcess = spawn(pythonPath, [scriptPath, uploadPath, outputPath]);
