@@ -5,7 +5,7 @@
 <%! 
     // 비밀번호를 해싱하는 메소드
     String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 %>
 
@@ -26,8 +26,8 @@
         String hashedPassword = hashPassword(userPassword);
         
         String dbURL = "jdbc:mysql://localhost:3306/user"; // 데이터베이스 URL 수정 필요
-        String dbUser = "root"; // 데이터베이스 사용자명 수정 필요
-        String dbPassword = "1234"; // 데이터베이스 비밀번호 수정 필요
+        String dbUser = ""; // 데이터베이스 사용자명 수정 필요
+        String dbPassword = ""; // 데이터베이스 비밀번호 수정 필요
 
         Connection conn = null;
         PreparedStatement pstmt = null;
