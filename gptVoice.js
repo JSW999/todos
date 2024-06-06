@@ -1,6 +1,6 @@
 let mediaRecorder;
 let audioChunks = [];
-const socket = io('http://localhost:4000'); // Node.js 서버 주소
+const socket = io(''); // Node.js 서버 주소
 
 document.getElementById('startRecording').addEventListener('click', () => {
 	navigator.mediaDevices.getUserMedia({ audio: true })
