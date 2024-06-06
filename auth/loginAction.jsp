@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 
 <!DOCTYPE html>
 <html>
@@ -11,7 +12,7 @@
 <body>
    <%
    String userID = request.getParameter("userID");
-   String password = request.getParameter("userPassword");
+   String userPassword = request.getParameter("userPassword");
    String userToken = null;
    
    String dbURL = "jdbc:mysql://localhost:3306/user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
@@ -26,25 +27,35 @@
       Class.forName("com.mysql.cj.jdbc.Driver");
       conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
       
-      String sql = "SELECT * FROM user WHERE userID=? AND userPassword=?";
+      String sql = "SELECT * FROM user WHERE userID=?";
       pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, userID);
-      pstmt.setString(2, password);
-
       rs = pstmt.executeQuery();
-      
+
       if (rs.next()) {
-    	  	userToken = rs.getString("userToken");
+         String storedHashedPassword = rs.getString("userPassword");
+         userToken = rs.getString("userToken");
+
+         // 비밀번호 비교
+         if (BCrypt.checkpw(userPassword, storedHashedPassword)) {
             session.setAttribute("userID", userID);
             session.setAttribute("userToken", userToken);
-         	response.sendRedirect("http://localhost:8080/todos/mainPage.jsp");
-      } else { 
-      %>
+            response.sendRedirect("http://localhost:8080/todos/mainPage.jsp");
+         } else {
+            %>
+            <script>
+            alert("아이디 또는 비밀번호를 잘못 입력하셨습니다.");
+            location.href = "http://localhost:8080/todos/auth/login.html";         
+            </script>
+            <%
+         }
+      } else {
+         %>
          <script>
          alert("아이디 또는 비밀번호를 잘못 입력하셨습니다.");
          location.href = "http://localhost:8080/todos/auth/login.html";         
          </script>
-      <%
+         <%
       }
    } catch (Exception e) {
       e.printStackTrace();
@@ -72,7 +83,5 @@
       }
    } 
    %>
-   
-
 </body>
 </html>

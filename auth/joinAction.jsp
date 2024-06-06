@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, java.util.UUID" %>
+<%@ page import="org.mindrot.jbcrypt.BCrypt" %>
+
+<%! 
+    // 비밀번호를 해싱하는 메소드
+    String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,13 +23,15 @@
         
         String userToken = UUID.randomUUID().toString();
         
+        String hashedPassword = hashPassword(userPassword);
+        
         String dbURL = "jdbc:mysql://localhost:3306/user"; // 데이터베이스 URL 수정 필요
         String dbUser = "root"; // 데이터베이스 사용자명 수정 필요
         String dbPassword = "1234"; // 데이터베이스 비밀번호 수정 필요
 
         Connection conn = null;
         PreparedStatement pstmt = null;
-
+        
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
@@ -30,7 +41,7 @@
             
             
             pstmt.setString(1, userID);
-            pstmt.setString(2, userPassword);
+            pstmt.setString(2, hashedPassword);
             pstmt.setString(3, userEmail);
             pstmt.setString(4, userToken);
             
@@ -72,4 +83,4 @@
         
     %>
 </body>
-</html>\
+</html>
