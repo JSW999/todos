@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,6 +97,7 @@
         <button id="close-add-event-button">닫기</button>
     </div>
     
+    <!-- 캘린더 이벤트 클릭 시 수정할 수 있는 폼 -->
     <div id="edit-event-form">
     <input type="text" id="edit-event-title" placeholder="일정 제목" required>
     <input type="text" id="edit-event-start-date-display" placeholder="시작 날짜" readonly>
@@ -109,7 +110,7 @@
     <button id="close-edit-form-button">닫기</button>
 	</div>
     
-    <div id="calendar"></div>
+    <div id="calendar"></div> <!-- 캘린더 출력 -->
 
     <script src="../main.js"></script>
     <script src="../locales-all.js"></script>
@@ -122,7 +123,8 @@
     	var month = ('0' + (today.getMonth() + 1)).slice(-2);
     	var day = ('0' + today.getDate()).slice(-2);
 
-    	var dateString = year + '-' + month  + '-' + day;
+    	var dateString = year + '-' + month  + '-' + day; // 오늘 날짜 정보(yyyy-mm-dd)
+    	
     </script>
     
     <script>
@@ -188,9 +190,7 @@
                 // event 클릭 시 제목, 날짜 수정 and 일정 세부 사항 작성 기능 
                 eventClick: function(info) {
                     var event = info.event;
-					
-         
-                    
+                   
                     // 클릭한 event 저장된 일정 제목, 날짜 값 가져오기
                     document.getElementById('edit-event-title').value = event.title;
                     document.getElementById('edit-event-start-date').value = event.startStr;
@@ -242,7 +242,8 @@
                     $('#close-edit-form-button').off('click').on('click', closeEditForm);
                     $('#save-edit-event-button').off('click').on('click', saveEvent);
                     $('#delete-edit-event-button').off('click').on('click', deleteEvent);
-
+					
+                    // 일정 수정 폼 닫기 함수
                     function closeEditForm() {
                         document.getElementById('edit-event-form').style.display = 'none';
                         
@@ -324,7 +325,7 @@
 
 
             
-            calendar.render();
+            calendar.render(); // 캘린더 새로고침
                        
             // 일정 시작 datepicker
             $("#event-start-date-display").datepicker({

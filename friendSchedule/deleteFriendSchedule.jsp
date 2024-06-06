@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, java.util.*, javax.servlet.http.*" %>
 
-<%
+<% 
+	// 친구의 userToken 값을 받아와 일치한 정보를 다른 사용자 할 일에서 제거 
     String friendUserToken = request.getParameter("friendUserToken");
 
     Connection conn = null;
@@ -26,6 +27,7 @@
             pstmt.setString(1, friendUserToken);
             pstmt.executeUpdate();
             
+            // 사용했던 세션 제거
             session.removeAttribute("friendSchedules");
             session.removeAttribute("friendTotalTasks");
             session.removeAttribute("friendTodayTasks");

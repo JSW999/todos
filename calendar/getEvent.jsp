@@ -2,7 +2,7 @@
 <%@ page import="java.sql.*" %>
 
 <%
-
+	// userToken 값을 받아와 일치한 정보를 db에서 찾기
 	String userToken = (String) session.getAttribute("userToken");
     Connection conn = null;
     Statement stmt = null;
@@ -17,6 +17,7 @@
         
         stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         
+        // event, schedules 테이블에서 userToken 값과 일치한 정보 선택 쿼리
         String sql = "SELECT id, title, start_date, end_date FROM event WHERE userToken = '" + userToken + "'" + 
         			 " UNION " + 
         			 "SELECT id, title, start_date, end_date FROM schedules WHERE userToken = '" + userToken + "'";

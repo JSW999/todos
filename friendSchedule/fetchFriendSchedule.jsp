@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, java.util.*, javax.servlet.http.*, java.time.*" %>
 <%
+	// 친구의 userToken 값을 받아와 해당 유저 토큰과 일치한 정보를 session(friendSchedules)에 저장
     String friendUserToken = request.getParameter("friendUserToken");
 	session.setAttribute("friendUserToken", friendUserToken);
 
@@ -21,7 +22,7 @@
     String dbPassword = "1234";
 
     
-    
+    // 친구 일정의 총합, 오늘 할 일 개수 
     int friendTotalTasks = 0;
     int friendTodayTasks = 0;
 
@@ -32,13 +33,14 @@
             
             stmtF_Schedules = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
             
+            // 친구 일정 정보 가져오는 쿼리
             String fetchSql = "SELECT id, title, start_date, end_date FROM schedules WHERE userToken = '" + friendUserToken + "'" +
             				  " UNION ALL " +
             				  "SELECT id, title, start_date, end_date FROM event WHERE userToken = '" + friendUserToken + "'";
             rsF_Schedules = stmtF_Schedules.executeQuery(fetchSql);
             
 
-            
+            // 리스트에 저장
             List<Map<String, Object>> friendSchedules = new ArrayList<>();
             while (rsF_Schedules.next()) {
                 Map<String, Object> friendSchedule = new HashMap<>();
@@ -49,8 +51,9 @@
                 friendSchedules.add(friendSchedule);
             }
 			
-            session.setAttribute("friendSchedules", friendSchedules);
-
+            session.setAttribute("friendSchedules", friendSchedules); // 리스트 값을 session에 저장
+			
+            // 친구 일정의 총 합, 오늘 할 일 개수 가져오는 쿼리
             String totalTasksSql = "SELECT COUNT(*) AS totalTasks FROM (SELECT id FROM schedules WHERE userToken = '" + friendUserToken + "'" +
 			                       " UNION ALL " +
 			                       "SELECT id FROM event WHERE userToken = '" + friendUserToken + "') AS combined";
@@ -75,7 +78,8 @@
                 friendTodayTasks = rsF_TodayTasks.getInt("todayTasks");
                 
             }
-
+			
+            // 총 합, 오늘 할 일 개수를 세션에 저장
             session.setAttribute("friendTotalTasks", friendTotalTasks);
             session.setAttribute("friendTodayTasks", friendTodayTasks);
             
