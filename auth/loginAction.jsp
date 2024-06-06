@@ -16,8 +16,8 @@
    String userToken = null;
    
    String dbURL = "jdbc:mysql://localhost:3306/user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-   String dbUser = "root";
-   String dbPassword = "1234";
+   String dbUser = "";
+   String dbPassword = "";
    
    Connection conn = null;
    PreparedStatement pstmt = null;
