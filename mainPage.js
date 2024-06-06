@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(loadWidgetPositions, 500); // 500ms 지연 후 위치 로드
 
-    const widgets = document.querySelectorAll('.widget');
-    widgets.forEach(widget => {
+    const widgets = document.querySelectorAll('.widget'); // 위젯의 element 요소들을 리스트 형식으로 초기화
+    widgets.forEach(widget => {  // 선택된 위젯의 위치 사이즈 정보를 로컬스토리지에서 값을 가져와 위젯 사이즈 지정
         const id = widget.id;
         const savedWidth = localStorage.getItem(`${id}-width`);
         const savedHeight = localStorage.getItem(`${id}-height`);
@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.querySelectorAll('.resize-handle').forEach(handle => {
+    document.querySelectorAll('.resize-handle').forEach(handle => { // 위젯 사이즈 조절 박스를 선택 시 이벤트리스너 발생
         handle.addEventListener('mousedown', initResize);
     });
 
-    function loadWidgetPositions() {
+    function loadWidgetPositions() { // 위젯의 위치 정보를 로컬스토리지에서 값을 가져와 위치 지정
         $('.widget').each(function() {
             const id = this.id;
             const left = localStorage.getItem(`${id}-left`);
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function initializeCalendar() {
+    function initializeCalendar() { // 위젯 내용 부분에 캘린더 표시
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
             fixedWeekCount: false
         });
         calendar.render();
-        return calendar;
+        return calendar; 
     }
 
     let calendar = initializeCalendar();
 
-    // Function to save widget size
-    function saveWidgetSize(widget) {
+    
+    function saveWidgetSize(widget) {  // 위젯의 사이즈를 로컬스토리지에 저장
         const id = widget.id;
         const width = widget.style.width;
         const height = widget.style.height;
@@ -97,23 +97,23 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(`${id}-height`, height);
     }
 
-    // Function to save widget position
-    function saveWidgetPosition(widget) {
+    
+    function saveWidgetPosition(widget) { // 위젯의 위치 정보를 로컬스토리지에 저장
         const id = widget.id;
         const position = $(widget).position();
         localStorage.setItem(`${id}-left`, position.left);
         localStorage.setItem(`${id}-top`, position.top);
     }
 
-    // Function to handle resize initialization
-    function initResize(e) {
+    
+    function initResize(e) {  // 위젯의 사이즈 조절 기능
         const widget = e.target.parentElement;
         const startX = e.clientX;
         const startY = e.clientY;
         const startWidth = parseInt(document.defaultView.getComputedStyle(widget).width, 10);
         const startHeight = parseInt(document.defaultView.getComputedStyle(widget).height, 10);
 
-        function startResizing(e) {
+        function startResizing(e) {  // 마우스를 누르고 있을 경우 사이즈 정보를 계속 받아옴
             const newWidth = startWidth + e.clientX - startX;
             const newHeight = startHeight + e.clientY - startY;
             widget.style.width = `${newWidth}px`;
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             refreshWidget(widget);
         }
 
-        function stopResizing() {
+        function stopResizing() {  // 마우스를 뗄 경우 사이즈 정보 최종 저장 후 위젯 새로고침(새로고침은 캘린더 위젯만 해당)
             window.removeEventListener('mousemove', startResizing);
             window.removeEventListener('mouseup', stopResizing);
             saveWidgetSize(widget);
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
     }
 
-    function refreshWidget(widget) {
+    function refreshWidget(widget) {  // 캘린더 위젯 새로고침 함수
         const id = widget.id;
 
         if (id === 'widget2') {
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function initializeWeatherWidget(lat, lon) {
+    function initializeWeatherWidget(lat, lon) {  // 날씨 위젯 데이터 받아오기
         const apiKey = 'd91938c1ddaf0a3ca1be992ababfa691'; // OpenWeatherMap API 키
         const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`;
         const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`;
@@ -199,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     dailyForecasts[date].temps.push(forecast.main.temp);
                 });
-
+				
+				// 최고온도, 최저온도 값 받아오기
                 Object.values(dailyForecasts).forEach(forecast => {
                     const maxTemp = Math.max(...forecast.temps);
                     const minTemp = Math.min(...forecast.temps);
@@ -217,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching forecast data:', error));
     }
 
-    function getLocationAndInitializeWeatherWidget() {
+    function getLocationAndInitializeWeatherWidget() {  // 사용자 위치 정보 받아오기
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                 const lat = position.coords.latitude;
@@ -225,76 +226,85 @@ document.addEventListener('DOMContentLoaded', function() {
                 initializeWeatherWidget(lat, lon);
             }, error => {
                 console.error('Error getting location:', error);
-                // 기본 위치를 설정 (예: 서울)
+                // 기본 위치를 설정 (서울)
                 initializeWeatherWidget(37.5665, 126.9780);
             });
         } else {
             console.error('Geolocation is not supported by this browser.');
-            // 기본 위치를 설정 (예: 서울)
+            // 기본 위치를 설정 (서울)
             initializeWeatherWidget(37.5665, 126.9780);
         }
     }
 
-    getLocationAndInitializeWeatherWidget();
+    getLocationAndInitializeWeatherWidget();  // 위치 정보 받아오기 함수 실행
     
-    document.getElementById('w_schedule').addEventListener('click', function() {
+    document.getElementById('w_schedule').addEventListener('click', function() {  // 할 일 위젯 모달 열기
         document.getElementById('schedule-modal').style.display = 'block';
         document.getElementById('modal-background').style.display = 'block';
     });
     
-    document.getElementById('closeSchedule').addEventListener('click', function() {
+    document.getElementById('closeSchedule').addEventListener('click', function() {  // 할 일 위젯 모달 닫기
         document.getElementById('schedule-modal').style.display = 'none';
         document.getElementById('modal-background').style.display = 'none';
     });
 
-    document.getElementById('w_calendar').addEventListener('click', function() {
-        console.log("캘린더 모달 열림");
+    document.getElementById('w_calendar').addEventListener('click', function() {  // 캘린더 위젯 모달 열기
         document.getElementById('calendar-modal').style.display = 'block';
         document.getElementById('modal-background').style.display = 'block';
     });
     
-    document.getElementById('closeCalendar').addEventListener('click', function() {
-        console.log("캘린더 모달 닫힘");
+    document.getElementById('closeCalendar').addEventListener('click', function() {  // 캘린더 위젯 모달 닫기
         document.getElementById('calendar-modal').style.display = 'none';
         document.getElementById('modal-background').style.display = 'none';
     });
 
-    document.getElementById('w_calendar').addEventListener('click', function() {
-        document.getElementById('iframe').src = 'calendar/calendar.html'; // 새 HTML 파일 경로
+    document.getElementById('w_calendar').addEventListener('click', function() {  // 캘린더 모달 부분에 iframe 경로 지정 및 출력
+        document.getElementById('iframe').src = 'calendar/calendar.html'; 
         document.getElementById('iframe-container').style.display = 'block';
     });
     
-    document.getElementById('w_friendSchedule').addEventListener('click', function() {
+    document.getElementById('w_friendSchedule').addEventListener('click', function() {  // 친구 일정 위젯 모달 열기
         document.getElementById('f_schedule-modal').style.display = 'block';
         document.getElementById('modal-background').style.display = 'block';
     });
     
-    document.getElementById('f_closeSchedule').addEventListener('click', function() {
+    document.getElementById('f_closeSchedule').addEventListener('click', function() {  // 친구 일정 위젯 모달 닫기
         document.getElementById('f_schedule-modal').style.display = 'none';
         document.getElementById('modal-background').style.display = 'none';
     });
 
-    document.getElementById('add-event-button').addEventListener('click', function() {
+    document.getElementById('add-event-button').addEventListener('click', function() {  // 내 일정 모달 내에 일정 추가 버튼 (폼 열기)
         document.getElementById('add-event-form').style.display = 'block';
         document.getElementById('modal-background').style.display = 'block';
     });
 
-    document.getElementById('close-add-event-button').addEventListener('click', function() {
+    document.getElementById('close-add-event-button').addEventListener('click', function() {  // 내 일정 모달 내에 닫기 버튼 (폼 닫기)
         document.getElementById('add-event-form').style.display = 'none';
         document.getElementById('modal-background').style.display = 'none';
     });
     
-    document.getElementById('open-weather-modal').addEventListener('click', function(){
+    document.getElementById('open-weather-modal').addEventListener('click', function(){  // 날씨 위젯 모달 열기
         document.getElementById('weather-modal').style.display = 'block';
         document.getElementById('modal-background').style.display = 'block';
     });
 
-    document.getElementById('close-weather-modal').addEventListener('click', function(){
+    document.getElementById('close-weather-modal').addEventListener('click', function(){  // 날씨 위젯 모달 닫기
         document.getElementById('weather-modal').style.display = 'none';
         document.getElementById('modal-background').style.display = 'none';
     });
+	
+	
+	document.getElementById('gptVoice-modal').addEventListener('click', function(){  // 날씨 위젯 모달 열기
+        document.getElementById('voice-modal').style.display = 'block';
+        document.getElementById('modal-background').style.display = 'block';
+    });
 
-    $("#event-start-date-display").datepicker({
+    document.getElementById('closeVoice').addEventListener('click', function(){  // 날씨 위젯 모달 닫기
+        document.getElementById('voice-modal').style.display = 'none';
+        document.getElementById('modal-background').style.display = 'none';
+    });
+    
+    $("#event-start-date-display").datepicker({  // 캘린더 일정 시작의 datepicker
         dateFormat: "yy-mm-dd",
         onSelect: function(dateText) {
             $("#event-start-date").val(dateText);
@@ -303,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    $("#event-end-date-display").datepicker({
+    $("#event-end-date-display").datepicker({  // 캘린더 일정 종료의 datepicker
         dateFormat: "yy-mm-dd",
         onSelect: function(dateText) {
             $("#event-end-date").val(dateText);
@@ -311,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('save-add-event-button').addEventListener('click', function() {
+    document.getElementById('save-add-event-button').addEventListener('click', function() {  // 캘린더 일정 저장 버튼 누를 시 값 초기화
         var title = document.getElementById('event-title').value;
         var startDate = document.getElementById('event-start-date').value;
         var endDate = document.getElementById('event-end-date').value;
@@ -340,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    $(document).ready(function() {
+    $(document).ready(function() {  // 채팅 기능
         const socket = io('http://localhost:3000'); // Node.js 서버의 주소
         console.log("Loaded userID:", userID);
 
@@ -356,7 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
             joinRoom(currentRoom, isRoomOwner);
             socket.emit('joinRoom', { room: currentRoom, userID: userID });
         }
-
+		
+		// 모달 열기
         function openChatModal() {
             $('#modal-background').show();
             $('#chat-modal').show();
@@ -370,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#w_chat').click(openChatModal);
         $('#close-chat-modal').click(closeChatModal);
 
-        $('#create-room-button').click(function() {
+        $('#create-room-button').click(function() {  // 방 만들기 버튼 클릭 이벤트
             const roomNumber = Math.floor(1000 + Math.random() * 9000);
             alert('방 번호: ' + roomNumber);
             isRoomOwner = true;
@@ -380,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('isRoomOwner', true); // 방 생성자 정보 저장
         });
 
-        $('#join-room-button').click(function() {
+        $('#join-room-button').click(function() {  // 방 참가 버튼 클릭 이벤트
             const roomNumber = $('#room-number-input').val();
             if (roomNumber) {
                 isRoomOwner = false;
@@ -393,17 +404,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        $('#send-message-button').click(function() {
+        $('#send-message-button').click(function() {  // 메세지 보내기 버튼 클릭 이벤ㅌ
             sendMessage();
         });
 
-        $('#chat-input').keyup(function(event) {
+        $('#chat-input').keyup(function(event) {  // 보내기 버튼 누르기 대신 엔터 입력도 가능
             if (event.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        $('#delete-room-button').click(function() {
+        $('#delete-room-button').click(function() {  // 방 삭제 버튼 클릭 이벤트
             if (confirm('정말로 방을 삭제하시겠습니까?')) {
                 socket.emit('deleteRoom', { room: currentRoom, userID: userID });
                 localStorage.removeItem('currentRoom'); // 방 정보 삭제
@@ -411,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        $('#leave-room-button').click(function() {
+        $('#leave-room-button').click(function() {  // 방 나가기 버튼 클릭 이벤트
             if (confirm('정말로 방을 나가시겠습니까?')) {
                 socket.emit('leaveRoom', { room: currentRoom, userID: userID });
                 localStorage.removeItem('currentRoom'); // 방 정보 삭제
@@ -419,23 +430,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        socket.on('roomDeleted', function() {
+        socket.on('roomDeleted', function() {  // 방 삭제시 서버에 해당 방 삭제 명령
             alert('방이 삭제되었습니다.');
             resetChat();
             closeChatModal();
         });
 
-        socket.on('leftRoom', function() {
+        socket.on('leftRoom', function() {  // 방에서 나갈 시 서버에 해당 유저 명령 
             alert('방을 나갔습니다.');
             resetChat();
             closeChatModal();
         });
 
-        socket.on('message', function(data) {
+        socket.on('message', function(data) {  // 서버에 메세지 저장
             addMessage(data.userID, data.message, 'received', data.timestamp);
         });
 
-        socket.on('previousMessages', function(messages) {
+        socket.on('previousMessages', function(messages) {  // 방에 있는 이전 메세지들 출력
             $('#chat-messages').empty(); // 중복 방지를 위해 채팅 기록 초기화
             $('#chat-messages-widget').empty(); // 중복 방지를 위해 채팅 기록 초기화
             messages.forEach(message => {
@@ -443,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        function joinRoom(roomNumber, isOwner) {
+        function joinRoom(roomNumber, isOwner) {  // 방 참가시 실행
             currentRoom = roomNumber;
             $('#chat-room').show();
             $('#chat-room-widget').show(); // 위젯 채팅방 표시
@@ -467,13 +478,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" id="chat-input-widget" placeholder="메시지를 입력하세요">
                     <button id="send-message-button-widget">보내기</button>
                 </div>
-            `);
+            `);  // 채팅 위젯 내용 부분에 채팅방 출력 
 
-            $('#send-message-button-widget').click(function() {
+            $('#send-message-button-widget').click(function() {  // 위젯 채팅방에서 메세지 보내기 기능
                 sendMessage();
             });
 
-            $('#chat-input-widget').keyup(function(event) {
+            $('#chat-input-widget').keyup(function(event) {  // 위젯 채팅방에서 엔터로 메세지 보내기 기능
                 if (event.key === 'Enter') {
                     sendMessage();
                 }
@@ -482,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#w_chat').click(openChatModal);
         }
 
-        function sendMessage() {
+        function sendMessage() {  // 메세지 보내기 함수
             const message = $('#chat-input').val() || $('#chat-input-widget').val();
             if (message) {
                 socket.emit('sendMessage', {
@@ -495,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        function addMessage(userID, text, type, timestamp) {
+        function addMessage(userID, text, type, timestamp) {  // 메세지 저장 함수
             const messageElement = $('<div>').addClass('message ' + type);
             messageElement.html('<span class="userID">' + userID + ':</span><span class="text">' + text + '</span><span class="timestamp">' + new Date(timestamp).toLocaleTimeString() + '</span>');
             $('#chat-messages').append(messageElement);
@@ -508,19 +519,19 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#chat-messages-widget').scrollTop($('#chat-messages-widget')[0].scrollHeight);
         }
 
-        function hideRoomJoinElements() {
+        function hideRoomJoinElements() {  // 방을 만들거나, 참가시 중복 방 생성, 참가를 막기 위해 해당 기능을 hide 처리
             $('#room-number-input').hide();
             $('#join-room-button').hide();
             $('#create-room-button').hide();
         }
 
-        function showRoomJoinElements() {
+        function showRoomJoinElements() {  // 방에 참여하고 있지 않고 있을 때, 방 생성이나 참가를 위해 해당 기능을 show 처리
             $('#room-number-input').show();
             $('#join-room-button').show();
             $('#create-room-button').show();
         }
 
-        function resetChat() {
+        function resetChat() {  // 방에 나갔을 시 해당 기능들 실행(메세지 초기화, 채팅방 가리기, 방삭제, 방나가기 버튼 가리기, 채팅 위젯 html 수정 등)
             $('#chat-messages').empty();
             $('#chat-messages-widget').empty();
             $('#chat-room').hide();
@@ -532,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showRoomJoinElements();
         }
 
-        function updateChatWidgetSize() {
+        function updateChatWidgetSize() {  // 채팅 위젯의 사이즈 변경 함수
             const widget = $('#widget4');
             const widgetMessages = $('#chat-messages-widget');
             const widgetRoom = $('#chat-room-widget');
@@ -552,16 +563,16 @@ document.addEventListener('DOMContentLoaded', function() {
             updateChatWidgetSize();
         });
 
-        $(".widget").draggable({
-            //containment: "parent", // 부모 요소 내에서만 드래그 가능
+        $(".widget").draggable({  // 위젯 드래그 기능
+            // containment: "parent", // 부모 요소 내에서만 드래그 가능 (사용 안함)
             stack: ".widget", // 위젯들이 겹치지 않도록 설정
-            stop: function(event, ui) {
+            stop: function(event, ui) {  // 드래그가 멈출 시 위젯 위치 저장
                 saveWidgetPosition(this);
             }
         });
 
-        // 위젯 리사이즈 핸들러 추가
-        $('.resize-handle').on('mousedown', function(e) {
+        // 위젯 리사이즈 핸들러 추가 (위의 기능에 드래그 비활성화 기능 추가, 기능 중복이지만 아직 업데이트를 하지 않음)
+        $('.resize-handle').on('mousedown', function(e) {  
             const $widget = $(this).closest('.widget');
             const $widget4 = $('#widget4');
 

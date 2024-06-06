@@ -3,7 +3,7 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="org.json.simple.JSONObject" %>
 
-<%
+<%  // schedule db의 schedules 테이블에 입력한 일정 저장
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/plain");
 	response.setCharacterEncoding("UTF-8");
@@ -39,7 +39,7 @@
         pstmt.setString(5, userToken);
         pstmt.executeUpdate();
 
-        response.getWriter().write("success");
+        response.getWriter().write("success");  // 성공시 success 출력
 		
     } catch (Exception e) {
     	response.getWriter().write("fail");

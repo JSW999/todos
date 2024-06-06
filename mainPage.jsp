@@ -128,11 +128,12 @@
 <body>
 	
     <div class="dashboard">
-        <h1>Welcome back <span><%= userID %></span><span><%= userToken %></span></h1>
+    	<!-- 대문 -->
+        <h1>Welcome back <span><%= userID %></span>
+        <span style="font-size:20px">토큰: <%= userToken %></span></h1>
         <a href="logout.jsp" class="logout-btn">로그아웃</a>
         
         <!-- 위젯 모음 -->
-        
         <div class="widgets">
         	<!-- 내 일정 리스트 위젯 -->
             <div class="do List widget" id="widget1">
@@ -164,6 +165,7 @@
                 <div class="resize-handle"></div>
             </div>
             
+            <!-- 채팅 위젯 -->
             <div class="chat widget" id="widget4">
                 <p class="label">채팅</p>
                 <div class="values" id="chat-values">
@@ -177,6 +179,7 @@
                 <div class="resize-handle"></div>
             </div>
             
+            <!-- 날씨 위젯 -->
             <div class="weather widget" id="widget5">
                <div class="label">날씨</div>
                 <div class="values">
@@ -188,10 +191,10 @@
                 <div class="resize-handle"></div>
             </div>
             
-            <div class="widget 6" id="widget6">
-                <p class="label">위젯6</p>
-                <p class="amount">내용</p>
-                <div class="icon" onclick="openModal()">></div>
+            <!-- 아래서 부턴 미구현 위젯 -->
+            <div class="gptVoice widget" id="widget6">
+                <p class="label">인공지능 대화</p>
+                <div class="icon" id="gptVoice-modal">></div>
                 <div class="resize-handle"></div>
             </div>
             
@@ -208,7 +211,7 @@
                 <div class="icon" onclick="openModal()">></div>
                 <div class="resize-handle"></div>
             </div>
-            
+            <!-- 위젯 끝 -->
         </div>
     </div>
     
@@ -216,8 +219,9 @@
     <div id="modal-background" class="modal-background"></div>
     <div id="schedule-modal" class="modal">
         <div class="modal-content">
-            <span id="closeSchedule" class="close">&times;</span>
+            <span id="closeSchedule" class="close">&times;</span> <!-- 모달 닫기 -->
             <button id="add-event-button">일정 추가</button>
+            <!-- 일정 추가 버튼 누르면 나오는 레이어 -->
             <div id="add-event-form">
 		        <input type="text" id="event-title" placeholder="일정 제목" required>
 		        <input type="text" id="event-start-date-display" placeholder="일정 시작" readonly>
@@ -227,6 +231,8 @@
 		        <button id="save-add-event-button">저장</button>
 		        <button id="close-add-event-button">닫기</button>
 		    </div>
+		    
+		    <!-- 추가한 일정 값을 받아와 출력 -->
             <h3>추가된 일정</h3>
             <div id="schedule-list-modal">
                <%
@@ -234,10 +240,10 @@
 			    List<Map<String, Object>> schedules = (List<Map<String, Object>>) session.getAttribute("schedules");
 			    if (schedules != null) {
 			        for (Map<String, Object> schedule : schedules) {
-			            int id = (int) schedule.get("id");
-			            String title = (String) schedule.get("title");
-			            java.sql.Date start_date = (java.sql.Date) schedule.get("start_date");
-			            java.sql.Date end_date = (java.sql.Date) schedule.get("end_date");
+			            int id = (int) schedule.get("id"); 
+			            String title = (String) schedule.get("title"); // 일정 제목
+			            java.sql.Date start_date = (java.sql.Date) schedule.get("start_date"); // 일정 시작 날짜
+			            java.sql.Date end_date = (java.sql.Date) schedule.get("end_date"); // 일정 종료 날짜
 			    %>
                 <!-- date, time, title 출력 -->
                 <div class="schedule-item-modal">
@@ -260,7 +266,7 @@
     <div id="modal-background" class="modal-background"></div>
     <div id="f_schedule-modal" class="modal">
 	    <div class="modal-content">
-	        <span id="f_closeSchedule" class="close">&times;</span>  
+	        <span id="f_closeSchedule" class="close">&times;</span>  <!-- 모달 닫기 -->
 	           
 	        <h2>사용자 토큰 입력</h2>
 	        <!-- 유저 토큰 입력으로 다른 사용자 일정 가져오기 -->
@@ -283,9 +289,9 @@
             if (friendSchedules != null) {
                 for (Map<String, Object> friendSchedule : friendSchedules) {
                     int id = (int) friendSchedule.get("id");
-                    String title = (String) friendSchedule.get("title");
-                    java.sql.Date start_date = (java.sql.Date) friendSchedule.get("start_date");
-                    java.sql.Date end_date = (java.sql.Date) friendSchedule.get("end_date");   
+                    String title = (String) friendSchedule.get("title"); // 일정 제목
+                    java.sql.Date start_date = (java.sql.Date) friendSchedule.get("start_date"); // 일정 시작 날짜
+                    java.sql.Date end_date = (java.sql.Date) friendSchedule.get("end_date"); // 일정 종료 날짜
             %>
 	             
 	            <!-- date, time, title 출력 -->
@@ -304,10 +310,11 @@
     <div id="modal-background" class="modal-background"></div>
 	<div id="calendar-modal" class="modal">
         <div class="modal-content">
-            <span id="closeCalendar" class="close">&times;</span>
+            <span id="closeCalendar" class="close">&times;</span> <!-- 모달 닫기 -->
 
             <h2>캘린더</h2>
             <div id="iframe-container" style="display: none; height: 680px;">
+            	<!-- calendar 폴더의 calendar.html 받아오기 -->
         		<iframe id="iframe" src="" style="width: 100%; height: 80%; border: none;"></iframe>
     		</div>
         </div>
@@ -316,16 +323,17 @@
     <!-- 채팅 모달 -->
     <div class="modal-background" id="modal-background"></div>
     <div class="modal" id="chat-modal">
-        <span class="close" id="close-chat-modal">&times;</span>
+        <span class="close" id="close-chat-modal">&times;</span> <!-- 모달 닫기 -->
         <div class="modal-content">
             <h2>n:n 채팅방</h2>
-            <div>
+            <div> <!-- 채팅방 기능 -->
                 <button id="create-room-button">방 만들기</button>
                 <button id="delete-room-button" style="display:none;">방 삭제</button>
     			<button id="leave-room-button" style="display:none;">방 나가기</button>
                 <input type="text" id="room-number-input" placeholder="방 번호 입력">
                 <button id="join-room-button">방 참가</button>
             </div>
+            <!-- 채팅치는 레이어 -->
             <div id="chat-room" style="display:none;">
                 <div id="chat-messages" style="height: 400px; overflow-y: auto;"></div>
                 <input type="text" id="chat-input" placeholder="메시지를 입력하세요">
@@ -338,20 +346,32 @@
     <!-- 날씨 모달 -->
     <div id="weather-modal" class="modal">
         <div class="modal-content">
-            <span class="close" id="close-weather-modal">&times;</span>
-            <h2>Weather Details</h2>
+            <span class="close" id="close-weather-modal">&times;</span> <!-- 모달 닫기 -->
+            <h2>날씨 정보</h2>
             <div>
-                <img id="modal-weather-icon" src="" alt="Weather Icon">
-                <span id="modal-temperature"></span>
-                <span id="modal-location"></span>
+                <img id="modal-weather-icon" src="" alt="Weather Icon"> <!-- 날씨 아이콘 -->
+                <span id="modal-temperature"></span> <!-- 날씨 온도 -->
+                <span id="modal-location"></span> <!-- 지역 -->
             </div>
             <h3>시간별 날씨</h3>
-            <div id="hourly-forecast" class="forecast-container"></div>
+            <div id="hourly-forecast" class="forecast-container"></div> <!-- 3시간마다 날씨 정보 -->
             <h3>5일간 날씨 </h3>
-            <div id="five-day-forecast" class="forecast-container"></div>
+            <div id="five-day-forecast" class="forecast-container"></div> <!-- 5일간 날씨 정보 -->
         </div>
     </div>
     
+    <div id="modal-background" class="modal-background"></div>
+	<div id="voice-modal" class="modal">
+        <div class="modal-content">
+            <span id="closeVoice" class="close">&times;</span> <!-- 모달 닫기 -->
+            <h1>Voice to GPT</h1>
+		    <button id="startRecording">Start Recording</button>
+		    <button id="stopRecording" disabled>Stop Recording</button>
+		    <div id="response"></div>
+        </div>
+    </div>
+    
+    <script src="gptVoice.js?v=1.0"></script>
     <script src="mainPage.js?v=1.0"></script>
     <script src="main.js"></script>
     <script src="locales-all.js"></script>
