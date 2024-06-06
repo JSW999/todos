@@ -9,8 +9,8 @@
     PreparedStatement pstmt = null;
 
     String url = "jdbc:mysql://localhost:3306/scheduledb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    String dbUser = "root";
-    String dbPassword = "1234";
+    String dbUser = "";
+    String dbPassword = "";
 	
     if (friendUserToken != null && !friendUserToken.isEmpty()) {
         try {
