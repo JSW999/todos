@@ -14,8 +14,8 @@
     PreparedStatement schedulesPstmt = null;
     
     String url = "jdbc:mysql://localhost:3306/scheduleDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    String dbUser = "root"; // MySQL 사용자
-    String dbPassword = "1234"; // MySQL 비밀번호
+    String dbUser = ""; // MySQL 사용자
+    String dbPassword = ""; // MySQL 비밀번호
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
