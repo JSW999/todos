@@ -5,8 +5,8 @@
 
     // 데이터베이스 연결 정보
     String dbURL = "jdbc:mysql://localhost:3306/scheduleDB?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    String dbUser = "root"; // 데이터베이스 사용자 이름
-    String dbPassword = "1234"; // 데이터베이스 비밀번호
+    String dbUser = ""; // 데이터베이스 사용자 이름
+    String dbPassword = ""; // 데이터베이스 비밀번호
 
     Connection conn = null;
     PreparedStatement pstmt = null;
