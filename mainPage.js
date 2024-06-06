@@ -146,9 +146,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initializeWeatherWidget(lat, lon) {  // 날씨 위젯 데이터 받아오기
-        const apiKey = 'd91938c1ddaf0a3ca1be992ababfa691'; // OpenWeatherMap API 키
-        const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`;
-        const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`;
+        const apiKey = ''; // OpenWeatherMap API 키
+        const weatherApiUrl = ``;
+        const forecastApiUrl = ``;
 
         // 현재 날씨 데이터 가져오기
         fetch(weatherApiUrl)
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $(document).ready(function() {  // 채팅 기능
-        const socket = io('http://localhost:3000'); // Node.js 서버의 주소
+        const socket = io(''); // Node.js 서버의 주소
         console.log("Loaded userID:", userID);
 
         let currentRoom = null; // 방 번호 저장 변수
