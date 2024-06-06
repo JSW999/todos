@@ -18,8 +18,8 @@
     
     
     String url = "jdbc:mysql://localhost:3306/scheduledb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    String dbUser = "root";
-    String dbPassword = "1234";
+    String dbUser = "";
+    String dbPassword = "";
 
     
     // 친구 일정의 총합, 오늘 할 일 개수 
