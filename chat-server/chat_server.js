@@ -19,9 +19,9 @@ app.use(cors());
 // MySQL 데이터베이스 연결 설정
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root', // MySQL 사용자 이름
-    password: '1234', // MySQL 사용자 비밀번호
-    database: 'chatDB' // 사용하고자 하는 데이터베이스 이름
+    user: '', // MySQL 사용자 이름
+    password: '', // MySQL 사용자 비밀번호
+    database: '' // 사용하고자 하는 데이터베이스 이름
 });
 
 // 데이터베이스 연결
@@ -124,5 +124,5 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = ;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
